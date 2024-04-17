@@ -66,7 +66,7 @@ public:
         series_num = reader.GetInteger("expr", "series_num", -1);
         cout << "series_num: " << series_num << endl;
 
-        k = reader.GetInteger("expr", "k", -1);
+        k = reader.GetInteger(dataset, "maxK", -1);
         cout << "k: " << k << endl;
 
         dtw_window_percent = reader.GetReal("expr", "dtw_window_percent", -1);

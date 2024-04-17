@@ -24,6 +24,15 @@ public:
         return sb;
     }
 
+    static string timeSeriesDistance(float* timeSeries, float *query) {
+        string sb;
+        for (int i=0; i < Const::tsLength; ++i) {
+            sb += formatFloatValue(timeSeries[i], 4) + " , ";
+        }
+        sb.append("\n");
+        return sb;
+    }
+
     static string timeSeries2Line(vector<float>* timeSeries) {
         string sb;
         for (int i=0; i < Const::tsLength; ++i) {
