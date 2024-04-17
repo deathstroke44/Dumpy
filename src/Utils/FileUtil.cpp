@@ -94,7 +94,7 @@ void FileUtil::mergeFiles(const string sources[], const string& dest, int num ){
     fclose(out);
 }
 
-void readFVecsFromExternal(const char* filepath, float *data, int N, int maxRow=-1) {
+void readFVecsFromExternalV2(const char* filepath, float *data, int N, int maxRow=-1) {
   FILE *infile = fopen(filepath, "rb");
   if (infile == NULL) {
     std::cout << "File not found" << std::endl;
@@ -135,7 +135,7 @@ void readFVecsFromExternal(const char* filepath, float *data, int N, int maxRow=
 
 float* FileUtil::readQueries(){
     auto queries = new float[Const::tsLength * Const::query_num];
-    readFVecsFromExternal(Const::queryfn.c_str(), queries, Const::tsLength, Const::query_num);
+    readFVecsFromExternalV2(Const::queryfn.c_str(), queries, Const::tsLength, Const::query_num);
     return queries;
 }
 
