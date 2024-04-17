@@ -490,26 +490,27 @@ DumpyNode *DumpyNode::BuildIndex(string &datafn, string &saxfn) {
 }
 
 void DumpyNode::growIndex() {
+    Const::logPrint("Point 0");
     if(size <= Const::th)   return;    
     determineSegments();
     int chosen_num = chosenSegments.size();
-    
+    Const::logPrint("Point 1");
     // statistic children information in order to partition
     partUnit nodes[1<<chosen_num];
     for(int i=0;i<(1<<chosen_num);++i)
         nodes[i].id = i, nodes[i].size=0, nodes[i].pid = -1;
     vector<vector<int>>node_offsets(1<<chosen_num, vector<int>());
-
+    Const::logPrint("Point 2");
     for(int i=0;i<size;++i){
         int new_id = SaxUtil::extendSax(DumpyNode::saxes + (long)offsets[i] * (Const::segmentNum), bits_cardinality, chosenSegments);
         nodes[new_id].size++;
         node_offsets[new_id].push_back(offsets[i]);
     }
-
+    Const::logPrint("Point 3");
     if(this->layer > 1) vector<int>().swap(offsets);
 
     int partNum = partition(nodes, chosen_num);     
-    
+    Const::logPrint("Point 4");
     DumpyNode* childrenList[partNum];
     for(int i=0;i<partNum;++i)  childrenList[i] = new DumpyNode(this, i);
     children.resize(1 << chosen_num);
@@ -534,14 +535,15 @@ void DumpyNode::growIndex() {
             vector<int>().swap(node_offsets[i]);
         }
     }
-    
+    Const::logPrint("Point 5");
     vector<vector<int>>().swap(node_offsets);
-    
+    Const::logPrint("Point 6");
     for(auto &child: children){
         if(child!= nullptr && child->size > Const::th){
             child->growIndex();
         }
     }
+    Const::logPrint("Point 7");
 
 }
 
