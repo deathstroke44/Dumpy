@@ -6,6 +6,8 @@
 #include "../../include/Utils/FileUtil.h"
 #include "../../include/Utils/MathUtil.h"
 #include <thread>
+#include <stdio.h> 
+#include <time.h> 
 
 // We recommend building Dumpy-fuzzy with PAA table as follows.
 // Only with SAX table is also viable.
@@ -231,6 +233,8 @@ void materializeInterNodeFuzzy(DumpyNode* node, unsigned short *saxes, int actua
 
 DumpyNode*  DumpyNode::BuildIndexFuzzy(const string & datafn, const string & saxfn, const string &paafn, vector<vector<int>>* g){
     FileUtil::checkDirClean(Const::fuzzyidxfn.c_str());
+    clock_t t; 
+    t = clock(); 
     Const::logPrint("start building index.");
 
 //    long series_num = loadSax(saxfn);
@@ -361,7 +365,10 @@ DumpyNode*  DumpyNode::BuildIndexFuzzy(const string & datafn, const string & sax
     }
 
     Const::logPrint("Fuzzy series number is " + to_string(fuzzy_num));
+    t = clock() - t; 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
     Const::logPrint("build index successfully!");
+    cout << "Indexing time: "<< time_taken <<endl;
 
     return root;
 }

@@ -9,6 +9,7 @@
 #include "../include/Utils/FileUtil.h"
 #include "../include/Utils/MathUtil.h"
 #include "../include/Utils/TimeSeriesUtil.h"
+#include <time.h> 
 #include<bits/stdc++.h> 
 using namespace std;
 
@@ -108,41 +109,54 @@ void buildDumpyFuzzy(){
 }
 
 void approxSearchOneNodeFuzzy() {
+    clock_t t;
     int bound = Const::fuzzy_f * 100;
     Const::fuzzyidxfn += "/" + to_string(bound) + "-" + to_string(Const::delta) + "/";
     DumpyNode *root = DumpyNode::loadFromDisk(Const::saxfn, Const::fuzzyidxfn + "root.idx", false);
     auto *g = loadGraphSkeleton();
     float *queries = FileUtil::readQueries();
+    double total_query_time=0;
     for (int i = 0; i < Const::query_num; ++i) {
         Const::logPrint("Query " + to_string(i) + ":");
+        t = clock();
         vector<PqItemSeries *> *approxKnn = DumpySearcher::approxSearch(root, queries + i * Const::tsLength, Const::k,
                                                                         g, Const::fuzzyidxfn);
-        Const::logPrint("Results:");
-        for (int j = 0; j < approxKnn->size(); ++j) {
+        t = clock() - t;
+        double time_taken = ((double)t)/CLOCKS_PER_SEC;
+        total_query_time+=time_taken; 
+        cout<<"Query Result "<<i<<" :";
+        for (int j = 0; j < approxKnn->size(); ++j){
             // cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
-            cout << j + 1 << ": " << TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength) << endl;
+            cout << " "<<TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength);
         }
             
     }
+    cout<<"Query time: "<<total_query_time<<endl;
 }
 
 void approxSearchMoreNodeFuzzy() {
+    clock_t t;
     int bound = Const::fuzzy_f * 100;
     Const::fuzzyidxfn += "/" + to_string(bound) + "-" + to_string(Const::delta) + "/";
     DumpyNode *root = DumpyNode::loadFromDisk(Const::saxfn, Const::fuzzyidxfn + "root.idx", false);
     float *queries = FileUtil::readQueries();
+    double total_query_time=0;
     for (int i = 0; i < Const::query_num; ++i) {
         Const::logPrint("Query " + to_string(i) + ":");
+        t = clock();
         auto start = chrono::system_clock::now();
         vector<PqItemSeries *> *approxKnn = DumpySearcher::approxIncSearchFuzzy(root, queries + i * Const::tsLength,
                                                                                 Const::k, Const::fuzzyidxfn,
                                                                                 Const::visited_node_num);
-        Const::logPrint("Results:");
+        t = clock() - t;double time_taken = ((double)t)/CLOCKS_PER_SEC;
+        total_query_time+=time_taken; 
+        cout<<"Query Result "<<i<<" :";
         for (int j = 0; j < approxKnn->size(); ++j){
             // cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
-            cout << j + 1 << ": " << TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength) << endl;
+            cout << " "<<TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength);
         }
     }
+    cout<<"Query time: "<<total_query_time<<endl;
 }
 
 void exactSearchDumpy() {
