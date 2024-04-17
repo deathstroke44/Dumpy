@@ -153,7 +153,7 @@ void approxSearchMoreNodeFuzzy() {
         total_query_time+=time_taken; 
         cout<<"Query Result "<<i<<" :";
         for (int j = 0; j < approxKnn->size(); ++j){
-            cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
+            // cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
             cout << " "<<TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength);
         }
         cout<<endl;
