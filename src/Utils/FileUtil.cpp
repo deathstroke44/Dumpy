@@ -94,13 +94,48 @@ void FileUtil::mergeFiles(const string sources[], const string& dest, int num ){
     fclose(out);
 }
 
+void readFVecsFromExternal(const char* filepath, float *data, int N, int maxRow=-1) {
+  FILE *infile = fopen(filepath, "rb");
+  if (infile == NULL) {
+    std::cout << "File not found" << std::endl;
+    return;
+  }
+  
+  int rowCt = 0;
+  int dimen;
+  while (true) {
+    if (fread(&dimen, sizeof(int), 1, infile) == 0) {
+      break;
+    }
+    if (dimen != N) {
+      std::cout << "N and actual dimension mismatch" << std::endl;
+      return;
+    }
+    std::vector<float> v(dimen);
+    if(fread(v.data(), sizeof(float), dimen, infile) == 0) {
+      std::cout << "Error when reading" << std::endl;
+    };
+    
+    for (int i=0; i<dimen; i++) {
+      data[rowCt*N+i]= v[i];
+    }
+
+    rowCt++;
+    
+    if (maxRow != -1 && rowCt >= maxRow) {
+      break;
+    }
+  }
+  // std::cout<<"Row count test: "<<rowCt<<std::endl;
+
+  if (fclose(infile)) {
+    std::cout << "Could not close data file" << std::endl;
+  }
+}
+
 float* FileUtil::readQueries(){
     auto queries = new float[Const::tsLength * Const::query_num];
-    FILE *f = fopen(Const::queryfn.c_str(), "rb");
-    for(int i=0;i<Const::query_num;++i){
-        fread(queries + i * Const::tsLength, sizeof(float ), Const::tsLength, f);
-    }
-    fclose(f);
+    readFVecsFromExternal(Const::queryfn.c_str(), queries, Const::tsLength, Const::query_num);
     return queries;
 }
 
