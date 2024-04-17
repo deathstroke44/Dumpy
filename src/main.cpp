@@ -119,8 +119,8 @@ void approxSearchOneNodeFuzzy() {
                                                                         g, Const::fuzzyidxfn);
         Const::logPrint("Results:");
         for (int j = 0; j < approxKnn->size(); ++j) {
-            cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
-            // cout << j + 1 << ": " << TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength) << endl;
+            // cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
+            cout << j + 1 << ": " << TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength) << endl;
         }
             
     }
@@ -139,7 +139,7 @@ void approxSearchMoreNodeFuzzy() {
                                                                                 Const::visited_node_num);
         Const::logPrint("Results:");
         for (int j = 0; j < approxKnn->size(); ++j)
-            cout << j + 1 << ": " << TimeSeriesUtil::timeSeries2Line((*approxKnn)[j]->ts) << endl;
+            cout << j + 1 << ": " << TimeSeriesUtil::timeSeriesDistance((*approxKnn)[j]->ts,  queries + i * Const::tsLength) << endl;
     }
 }
 

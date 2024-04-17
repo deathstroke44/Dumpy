@@ -24,13 +24,12 @@ public:
         return sb;
     }
 
-    static string timeSeriesDistance(float* timeSeries, float *query) {
-        string sb;
+    static float timeSeriesDistance(float* timeSeries, float *query) {
+        float dist;
         for (int i=0; i < Const::tsLength; ++i) {
-            sb += formatFloatValue(timeSeries[i], 4) + " , ";
+            dist += (timeSeries[i]-query[i])*(timeSeries[i]-query[i]);
         }
-        sb.append("\n");
-        return sb;
+        return std::sqrt(dist);
     }
 
     static string timeSeries2Line(vector<float>* timeSeries) {
