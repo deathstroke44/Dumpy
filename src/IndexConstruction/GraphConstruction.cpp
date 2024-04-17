@@ -48,7 +48,7 @@ void GraphConstruction::buildAndSave2Disk() {
     for(int i=1;i<=neighborBits;++i)
         neighborNum += MathUtil::nChooseK(segmentNum, i);
     cout << "neighbor number = " << neighborNum << endl;
-    int threadNo = 20, chunk_size = arrayLength / threadNo;
+    int threadNo = 1, chunk_size = arrayLength / threadNo;
     thread threads[threadNo];
     for(int i=0;i<threadNo - 1;++i)
         threads[i] = thread(func, i * chunk_size, (i + 1) * chunk_size, neighborNum, neighborBits, segmentNum, graphFileName);
