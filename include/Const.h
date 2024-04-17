@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sys/time.h>
 #include "../include/Utils/INIReader.h"
+#include<bits/stdc++.h> 
+using namespace std;
 
 // Mihalis Tsoukalos and Nikos Platis
 #include <limits>
@@ -41,8 +43,8 @@ public:
     static int tsLengthPerSegment, cardinality, tsLengthBytes, vertexNum;
     static long offset;
 
-    static void readConfig(){
-        INIReader reader("../config.ini");
+    static void readConfig(string fileName){
+        INIReader reader(fileName.c_str());
 
         if (reader.ParseError() < 0) {
             cout << "Can't load '.ini'\n";

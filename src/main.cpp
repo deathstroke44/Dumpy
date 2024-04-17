@@ -9,6 +9,7 @@
 #include "../include/Utils/FileUtil.h"
 #include "../include/Utils/MathUtil.h"
 #include "../include/Utils/TimeSeriesUtil.h"
+#include<bits/stdc++.h> 
 using namespace std;
 
 vector<vector<int>>* loadGraphSkeleton(){
@@ -205,65 +206,70 @@ void statIndexDumpyFuzzy(){
     root->getIndexStats();
 }
 
-int main() {
-    Const::readConfig();
+int main(int argc, char* argv[]) {
+    for(int i=1;i<argc;i++) {
+        string s(argv[i]);
+        s="../configs/"+s;
+        Const::readConfig(s);
 
-    switch (Const::index) {
-        case 0:
-            constructGraph();
-            break;
-        case 1:
-            switch (Const::ops) {
-                case 0:
-                    buildDumpy();
-                    break;
-                case 1:
-                    approxSearchOneNode();
-                    break;
-                case 2:
-                    exactSearchDumpy();
-                    break;
-                case 3:
-                    statIndexDumpy();
-                    break;
-                case 4:
-                    approxSearchMoreNode();
-                    break;
-                case 5:
-                    approxSearchOneNodeDTW();
-                    break;
-                case 6:
-                    approxSearchMoreNodeDTW();
-                    break;
-                case 7:
-                    ngSearchDumpy();
-                    break;
-                case 8:
-                    exactSearchDumpyDTW();
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case 2:
-            if(Const::ops == 0){
-                buildDumpyFuzzy();
+        switch (Const::index) {
+            case 0:
+                constructGraph();
                 break;
-            }
-            else if(Const::ops == 1){
-                approxSearchOneNodeFuzzy();
+            case 1:
+                switch (Const::ops) {
+                    case 0:
+                        buildDumpy();
+                        break;
+                    case 1:
+                        approxSearchOneNode();
+                        break;
+                    case 2:
+                        exactSearchDumpy();
+                        break;
+                    case 3:
+                        statIndexDumpy();
+                        break;
+                    case 4:
+                        approxSearchMoreNode();
+                        break;
+                    case 5:
+                        approxSearchOneNodeDTW();
+                        break;
+                    case 6:
+                        approxSearchMoreNodeDTW();
+                        break;
+                    case 7:
+                        ngSearchDumpy();
+                        break;
+                    case 8:
+                        exactSearchDumpyDTW();
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            }else if(Const::ops == 3){
-                statIndexDumpyFuzzy();
+            case 2:
+                if(Const::ops == 0){
+                    buildDumpyFuzzy();
+                    break;
+                }
+                else if(Const::ops == 1){
+                    approxSearchOneNodeFuzzy();
+                    break;
+                }else if(Const::ops == 3){
+                    statIndexDumpyFuzzy();
+                    break;
+                }else if(Const::ops == 4){
+                    approxSearchMoreNodeFuzzy();
+                    break;
+                }else if(Const::ops == 7){
+                    ngSearchDumpyFuzzy();
+                    break;
+                }
                 break;
-            }else if(Const::ops == 4){
-                approxSearchMoreNodeFuzzy();
-                break;
-            }else if(Const::ops == 7){
-                ngSearchDumpyFuzzy();
-                break;
-            }
-            break;
-        default:    break;
+            default:    break;
+        }
     }
+    
 }
