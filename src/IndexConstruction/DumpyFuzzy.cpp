@@ -13,10 +13,51 @@
 static int fuzzy_num = 0;
 int *DumpyNode::mask = nullptr;
 
+
+void readFVecsFromExternal(const char* filepath, float *data, int N, int maxRow=-1) {
+  FILE *infile = fopen(filepath, "rb");
+  if (infile == NULL) {
+    std::cout << "File not found" << std::endl;
+    return;
+  }
+  
+  int rowCt = 0;
+  int dimen;
+  while (true) {
+    if (fread(&dimen, sizeof(int), 1, infile) == 0) {
+      break;
+    }
+    if (dimen != N) {
+      std::cout << "N and actual dimension mismatch" << std::endl;
+      return;
+    }
+    std::vector<float> v(dimen);
+    if(fread(v.data(), sizeof(float), dimen, infile) == 0) {
+      std::cout << "Error when reading" << std::endl;
+    };
+    
+    for (int i=0; i<dimen; i++) {
+      data[rowCt*N+i]= v[i];
+    }
+
+    rowCt++;
+    
+    if (maxRow != -1 && rowCt >= maxRow) {
+      break;
+    }
+  }
+  // std::cout<<"Row count test: "<<rowCt<<std::endl;
+
+  if (fclose(infile)) {
+    std::cout << "Could not close data file" << std::endl;
+  }
+}
+
+
 // put actual series into disk file of nodes in 1st layer
 void materialize1stLayerFuzzy(string datafn, DumpyNode* root, int *navids, string index_dir, unordered_map<DumpyNode*, NODE_RECORDER>* navigating_tbl){
     Const::logPrint("Start move data to disk file in 1st layer.");
-    FILE *f = fopen(datafn.c_str(), "r");
+    FILE *f = fopen(datafn.c_str(), "rb");
     long rest = root->size, total = root->size, cur = 0;
     unordered_map<DumpyNode*, LBL_UNIT>fbl;
 
@@ -27,9 +68,12 @@ void materialize1stLayerFuzzy(string datafn, DumpyNode* root, int *navids, strin
         long num;
         if(rest > Const::fbl_series_num)    num = Const::fbl_series_num;
         else num = rest;
-        auto *tss = new float[num * Const::tsLength];
-        fread(tss, sizeof(float),num * Const::tsLength,  f);
-
+        std::cout<<num<<" "<<Const::tsLength<<" "<<datafn<<endl;
+        float *tss = new float[num * Const::tsLength];
+        vector<float> data={};
+        readFVecsFromExternal(datafn.c_str(), tss, Const::tsLength, num);
+        std::cout<<data.size()<<std::endl;
+        // fread(tss, sizeof(float),num * Const::tsLength,  f);
         long bound = cur + num;
         // statistic the size of each node fbl size, and allocate memory for them
         for(long i=cur;i<bound;++i){
@@ -66,7 +110,7 @@ void materialize1stLayerFuzzy(string datafn, DumpyNode* root, int *navids, strin
                 fwrite(iter.second.buffer[i], sizeof(float), Const::tsLength, outf);
             fclose(outf);
         }
-        delete[] tss;
+        // delete[] tss;
 
         rest-=num;
         cur += num;
