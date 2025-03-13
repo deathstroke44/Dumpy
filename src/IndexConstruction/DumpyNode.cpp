@@ -10,7 +10,7 @@
 #include "../../include/Utils/MathUtil.h"
 #include "../../include/Utils/TimeSeriesUtil.h"
 #include "../../include/Utils/SaxUtil.h"
-
+using namespace std;
 unsigned short *DumpyNode::saxes = nullptr;
 float *DumpyNode::paas = nullptr;
 int DumpyNode::a = MathUtil::nChooseK(Const::segmentNum, 1), DumpyNode::b = MathUtil::nChooseK(Const::segmentNum, 2), DumpyNode::c = MathUtil::nChooseK(Const::segmentNum, 3);
@@ -162,6 +162,7 @@ void materializeAllLeavesWithSax(string datafn, DumpyNode* root, int *navids, st
     for(auto &[node, buffer]:sax_buffer){
         string outfile = Const::idxfn + node->getFileName() + "_sax";
         if(node->partition_id == -1)    outfile += "_L";
+        std::cout<<outfile<<endl;
         FILE *outf = fopen(outfile.c_str(), "a");
         for(auto sax:buffer)
             fwrite(sax, sizeof(unsigned short ), Const::segmentNum, outf);
