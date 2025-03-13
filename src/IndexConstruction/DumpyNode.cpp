@@ -170,6 +170,7 @@ void materializeAllLeavesWithSax(string datafn, DumpyNode* root, int *navids, st
     auto start_t = chrono::system_clock::now();
     Const::logPrint("Start move data to disk file in 1st layer.");
     FILE *f = fopen(datafn.c_str(), "rb");
+    Const::logPrint("reach here.");
     long rest = root->size, total = root->size, cur = 0;
     unordered_map<DumpyNode*, LBL_UNIT>lbl;
 
