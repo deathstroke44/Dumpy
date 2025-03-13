@@ -152,11 +152,13 @@ void materializeAllLeavesWithSax(string datafn, DumpyNode* root, int *navids, st
     Const::logPrint("Start move sax to disk file in 1st layer.");
 
     unordered_map<DumpyNode*, vector<unsigned short *>>sax_buffer;
+    Const::logPrint("reach here 0.");
     for(int i=0;i<root->size;++i){
         auto * sax = sax_tbl + i * Const::segmentNum;
         DumpyNode* node = root->route(sax);
         sax_buffer[node].push_back(sax);
     }
+    Const::logPrint("reach here 1.");
     for(auto &[node, buffer]:sax_buffer){
         string outfile = Const::idxfn + node->getFileName() + "_sax";
         if(node->partition_id == -1)    outfile += "_L";
@@ -165,12 +167,14 @@ void materializeAllLeavesWithSax(string datafn, DumpyNode* root, int *navids, st
             fwrite(sax, sizeof(unsigned short ), Const::segmentNum, outf);
         fclose(outf);
     }
+    Const::logPrint("reach here 2.");
     sax_buffer.clear();
+    Const::logPrint("reach here 3.");
 
     auto start_t = chrono::system_clock::now();
     Const::logPrint("Start move data to disk file in 1st layer.");
     FILE *f = fopen(datafn.c_str(), "rb");
-    Const::logPrint("reach here.");
+    Const::logPrint("reach here 4.");
     long rest = root->size, total = root->size, cur = 0;
     unordered_map<DumpyNode*, LBL_UNIT>lbl;
 
