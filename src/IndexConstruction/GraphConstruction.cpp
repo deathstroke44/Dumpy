@@ -66,7 +66,6 @@ void GraphConstruction::buildAndSave2Disk() {
     FileUtil::mergeFiles(sources, graphFileName, threadNo); 
     t = clock() - t; 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
-    Const::logPrint("build index successfully!");
     cout << "Graph construction time: "<< time_taken <<endl;
 
 
