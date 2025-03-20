@@ -9,6 +9,8 @@
 #include "../../include/DataStructures/GraphConstruction.h"
 #include "../../include/Utils/MathUtil.h"
 #include "../../include/Utils/FileUtil.h"
+#include <time.h> 
+
 int segmentNum  = 16, bitsReserve =3;
 string graphFileName =  "../RawGraph_" + to_string(segmentNum) + "_" + to_string(bitsReserve) + ".bin";
 
@@ -42,7 +44,8 @@ void func(int start, int end, int neighborNum, int neighborBits, int segment_num
 }
 
 void GraphConstruction::buildAndSave2Disk() {
-
+    clock_t t; 
+    t = clock();
     int arrayLength = 1 << segmentNum, neighborBits = bitsReserve;
     int neighborNum = 0;
     for(int i=1;i<=neighborBits;++i)
@@ -60,7 +63,11 @@ void GraphConstruction::buildAndSave2Disk() {
     string sources[threadNo];
     for(int i=0;i<threadNo;++i)
         sources[i] = (graphFileName + to_string(i * chunk_size));
-    FileUtil::mergeFiles(sources, graphFileName, threadNo);
+    FileUtil::mergeFiles(sources, graphFileName, threadNo); 
+    t = clock() - t; 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+    Const::logPrint("build index successfully!");
+    cout << "Graph construction time: "<< time_taken <<endl;
 
 
 }
